@@ -15,7 +15,9 @@ import entidade.Revista;
 import excecao.BibliotecaException;
 
 /**
+ * 
  * Representa o menu principal da aplicação Biblioteca.
+ * 
  * 
  * @author Adriano de Melo
  * @author Vilmar César Pereira Júnior
@@ -28,13 +30,14 @@ public class Menu {
 	private static final int OPCAO_MENU_CALCULAR_QUANTIDADE_OBRAS = 3;
 	private static final int OPCAO_MENU_IDENTIFICAR_OBRA_MAIS_ANTIGA = 4;
 	private static final int OPCAO_MENU_IDENTIFICAR_AUTOR_MAIS_NOVO = 5;
-	private static final int OPCAO_MENU_SAIR = 6;
+	private static final int OPCAO_MENU_IDENTIFICAR_MEDIA_IDADE_AUTORES = 6;
+	private static final int OPCAO_MENU_SAIR = 7;
 
 	// Atributos
 	private Scanner teclado = new Scanner(System.in);
 	private Biblioteca biblio = criarBiblioteca();
 
-	public void apresentarMenu() {
+	public void apresentarMenu() throws Exception {
 
 		this.mostrarOpcoesMenu();
 
@@ -52,12 +55,8 @@ public class Menu {
 				break;
 			}
 			case OPCAO_MENU_CADASTRAR_REVISTA: {
-				try {
-					Revista novaRevista = cadastrarRevista();
-					cadastrarObra(novaRevista);
-				} catch (BibliotecaException e) {
-					System.out.println("Deu erro! Causa: " + e.getMessage() + "\n");
-				}
+				Revista novaRevista = cadastrarRevista();
+				cadastrarObra(novaRevista);
 
 				break;
 			}
@@ -81,6 +80,10 @@ public class Menu {
 				}
 				break;
 			}
+			case OPCAO_MENU_IDENTIFICAR_MEDIA_IDADE_AUTORES: {
+				biblio.identificarMediaIdadeAutores();
+				break;
+			}
 			default: {
 				System.out.println("\nOpção Inválida");
 			}
@@ -102,11 +105,13 @@ public class Menu {
 		System.out.println(OPCAO_MENU_CALCULAR_QUANTIDADE_OBRAS + " - Calcular quantidade de obras");
 		System.out.println(OPCAO_MENU_IDENTIFICAR_OBRA_MAIS_ANTIGA + " - Identificar a obra mais antiga");
 		System.out.println(OPCAO_MENU_IDENTIFICAR_AUTOR_MAIS_NOVO + " - Identificar o autor mais novo");
+		System.out.println(
+				OPCAO_MENU_IDENTIFICAR_MEDIA_IDADE_AUTORES + " - Identificar a média de idade dos autores das obras");
 		System.out.println(OPCAO_MENU_SAIR + " - Sair");
 		System.out.print("\nDigite a Opção: ");
 	}
 
-	private Revista cadastrarRevista() throws BibliotecaException {
+	private Revista cadastrarRevista() throws Exception {
 		teclado.nextLine();
 
 		Revista novaRevista = null;
@@ -117,19 +122,14 @@ public class Menu {
 		System.out.print("\nDigite o título da revista: ");
 		String titulo = teclado.nextLine();
 
-		try {
-			System.out.print("\nDigite o número da edição da revista: ");
-			edicao = Integer.parseInt(teclado.nextLine());
+		System.out.print("\nDigite o número da edição da revista: ");
+		edicao = Integer.parseInt(teclado.nextLine());
 
-			System.out.print("\nDigite o ano da revista: ");
-			ano = Integer.parseInt(teclado.nextLine());
+		System.out.print("\nDigite o ano da revista: ");
+		ano = Integer.parseInt(teclado.nextLine());
 
-			System.out.print("\nDigite a periodicidade de publicação da revista (em dias): ");
-			periodicidadePublicacao = Integer.parseInt(teclado.nextLine());
-		} catch (NumberFormatException e) {
-			throw new BibliotecaException("'Edição', 'Ano' e 'Periodicidade' da revista devem ser valores INTEIROS.",
-					e);
-		}
+		System.out.print("\nDigite a periodicidade de publicação da revista (em dias): ");
+		periodicidadePublicacao = Integer.parseInt(teclado.nextLine());
 
 		Autor autor = cadastrarAutor();
 
@@ -150,12 +150,12 @@ public class Menu {
 		try {
 			System.out.print("\nDigite o número da edição do livro: ");
 			edicao = Integer.parseInt(teclado.nextLine());
-
-			System.out.print("\nDigite o ano do livro: ");
-			ano = Integer.parseInt(teclado.nextLine());
 		} catch (NumberFormatException e) {
-			throw new BibliotecaException("'Edição' e 'Ano' do livro devem ser valores INTEIROS. \nCausa: ", e);
+			throw new BibliotecaException("'Número' da casa deve ser um valor INTEIROS.", e);
 		}
+
+		System.out.print("\nDigite o ano do livro: ");
+		ano = Integer.parseInt(teclado.nextLine());
 
 		Autor autor = cadastrarAutor();
 
@@ -239,7 +239,7 @@ public class Menu {
 		Revista rev1 = new Revista("Veja", 60, 2012, autor1, 15);
 		Revista rev2 = new Revista("Istoé", 80, 2013, autor2, 30);
 		Revista rev3 = new Revista("Auto-Esporte", 20, 2011, autor3, 30);
-		Revista rev4 = new Revista("Super Interessante", 100, 2010, autor4, 30);
+		Revista rev4 = new Revista("Super Interessante", 100, 2010, null, 30);
 
 		// Livros
 		Livro livro1 = new Livro("Brejo das Almas", 8, 1983, autor1);
@@ -247,7 +247,7 @@ public class Menu {
 		Livro livro3 = new Livro("Colar de Carolina", 3, 1934, autor3);
 		Livro livro4 = new Livro("Os Condenados", 7, 1941, autor4);
 
-		ArrayList<Obra> obras = new ArrayList<Obra>();// { rev1, rev2, rev3, rev4, livro1, livro2, livro3, livro4 };
+		ArrayList<Obra> obras = new ArrayList<Obra>();
 		obras.add(rev1);
 		obras.add(rev2);
 		obras.add(rev3);

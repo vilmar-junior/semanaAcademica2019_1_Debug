@@ -62,7 +62,7 @@ public class Biblioteca {
 		if (this.getObras() != null && !this.getObras().isEmpty()) {
 			int indice = -1;
 			int maiorAno = this.getObras().get(0).getAno();
-			for (int i = 0; i < this.getObras().size(); i++) {
+			for (int i = 0; i <= this.getObras().size(); i++) {
 				if (this.getObras().get(i).getAno() < maiorAno) {
 					maiorAno = this.getObras().get(i).getAno();
 					indice = i;
@@ -77,10 +77,15 @@ public class Biblioteca {
 	public void identificarAutorMaisNovo() throws BibliotecaException {
 		if (this.getObras() != null && !this.getObras().isEmpty()) {
 			int indice = 0;
-			int menorIdade = this.getObras().get(0).getEscritor().calcularIdade();
+			Obra obraAtual = this.getObras().get(0);
+
+			int menorIdade = obraAtual.getEscritor().calcularIdade();
+
 			for (int i = 1; i < this.getObras().size(); i++) {
-				if (this.getObras().get(i).getEscritor().calcularIdade() < menorIdade) {
-					menorIdade = this.getObras().get(i).getEscritor().calcularIdade();
+				obraAtual = this.getObras().get(i);
+
+				if (obraAtual.getEscritor().calcularIdade() < menorIdade) {
+					menorIdade = obraAtual.getEscritor().calcularIdade();
 					indice = i;
 				}
 			}
@@ -98,5 +103,18 @@ public class Biblioteca {
 				break;
 			}
 		}
+	}
+
+	public void identificarMediaIdadeAutores() {
+		int totalAutores = 0;
+		int somaIdades = 0;
+
+		for (int i = 0; i < this.getObras().size(); i++) {
+			Autor autorDaObra = this.getObras().get(i).getEscritor();
+			somaIdades += autorDaObra.calcularIdade();
+		}
+
+		double media = somaIdades / totalAutores;
+		System.out.println("A média de idade dos autores é de " + media + " anos. \n");
 	}
 }
